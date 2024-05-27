@@ -5,6 +5,7 @@ dotenv.config({
 });
 const morgan = require("morgan");
 const dbConnection = require("./config/database");
+const colors = require("colors");
 const categoryRoutes = require("./routes/categoryRoute");
 
 // Connect with db
@@ -23,5 +24,5 @@ app.use("/api/v1/categories", categoryRoutes);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
-  console.log(`App running on port ${PORT}`);
+  console.log(`App running on port ${PORT}`.yellow.bold);
 });
