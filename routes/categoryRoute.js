@@ -1,5 +1,4 @@
 const express = require("express");
-const {} = require("express-validator");
 const {
   createCategory,
   getCategories,
