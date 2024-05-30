@@ -3,6 +3,33 @@ const asyncHandler = require("express-async-handler");
 const Subcategory = require("../models/subCategoryModel");
 const ApiError = require("../utils/apiError");
 
+// Nested Route
+// @route     POST   /api/v1/categories/:categoryId/subcategories
+exports.setCategoryIdToBody = (req, res, next) => {
+  if (!req.body.category) req.body.category = req.params.categoryId;
+  next();
+};
+// @desc      Create Category
+// @route     POST   /api/v1/subcategories
+// @access    Private
+exports.createSubCategory = asyncHandler(async (req, res) => {
+  const { name, category } = req.body;
+  const subCategory = await Subcategory.create({
+    name,
+    slug: slugify(name),
+    category,
+  });
+  res.status(201).json({ data: subCategory });
+});
+
+// Nested Route
+// @route     GET   /api/v1/categories/:categoryId/subcategories
+exports.createFilterObj = (req, res, next) => {
+  let filterObject = {};
+  if (req.params.categoryId) filterObject = { category: req.params.categoryId };
+  req.filterObject = filterObject;
+  next();
+};
 // @desc      Get List Of Subategory
 // @route     GET   /api/v1/subcategories
 // @access    Public
@@ -11,10 +38,7 @@ exports.getSubcategories = asyncHandler(async (req, res) => {
   const limit = req.query.limit * 1 || 5;
   const skip = (page - 1) * limit;
 
-  let filterObject = {};
-  if (req.params.categoryId) filterObject = { category: req.params.categoryId };
-
-  const subcategories = await Subcategory.find(filterObject)
+  const subcategories = await Subcategory.find(req.filterObject)
     .skip(skip)
     .limit(limit);
   // .populate({
@@ -39,22 +63,6 @@ exports.getSubcategory = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({ data: subcategory });
 });
-
-// @desc      Create Category
-// @route     POST   /api/v1/subcategories
-// @access    Private
-exports.createSubCategory = asyncHandler(async (req, res) => {
-  const { name, category } = req.body;
-  const subCategory = await Subcategory.create({
-    name,
-    slug: slugify(name),
-    category,
-  });
-  res.status(201).json({ data: subCategory });
-});
-
-// Nested Route
-// GET  /api/v1/categories/:categoryId/subcategories
 
 // @desc      Update Specific subategory
 // @route     PUT   /api/v1/subcategories/:id
