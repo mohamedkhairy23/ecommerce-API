@@ -11,10 +11,16 @@ exports.getSubcategories = asyncHandler(async (req, res) => {
   const limit = req.query.limit * 1 || 5;
   const skip = (page - 1) * limit;
 
-  const subcategories = await Subcategory.find({})
-    .populate("category")
+  let filterObject = {};
+  if (req.params.categoryId) filterObject = { category: req.params.categoryId };
+
+  const subcategories = await Subcategory.find(filterObject)
     .skip(skip)
     .limit(limit);
+  // .populate({
+  //   path: "category",
+  //   select: "name -_id",
+  // });
   res
     .status(200)
     .json({ result: subcategories.length, page, data: subcategories });
@@ -46,6 +52,9 @@ exports.createSubCategory = asyncHandler(async (req, res) => {
   });
   res.status(201).json({ data: subCategory });
 });
+
+// Nested Route
+// GET  /api/v1/categories/:categoryId/subcategories
 
 // @desc      Update Specific subategory
 // @route     PUT   /api/v1/subcategories/:id
