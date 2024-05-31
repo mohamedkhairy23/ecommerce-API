@@ -3,6 +3,7 @@ const { check, body } = require("express-validator");
 const validatorMiddleware = require("../../middlewares/validatorMiddleware");
 const Category = require("../../models/categoryModel");
 const SubCategory = require("../../models/subCategoryModel");
+const Brand = require("../../models/brandModel");
 
 exports.createProductValidator = [
   check("title")
@@ -102,7 +103,17 @@ exports.createProductValidator = [
       )
     ),
 
-  check("brand").optional().isMongoId().withMessage("Invalid ID formate"),
+  check("brand")
+    .optional()
+    .isMongoId()
+    .withMessage("Invalid ID formate")
+    .custom((brandId) =>
+      Brand.findById(brandId).then((brand) => {
+        if (!brand) {
+          return Promise.reject(new Error(`No brand for this id: ${brandId}`));
+        }
+      })
+    ),
   check("ratingsAverage")
     .optional()
     .isNumeric()
