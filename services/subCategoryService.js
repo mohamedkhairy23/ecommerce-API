@@ -97,5 +97,5 @@ exports.deleteSubcategory = asyncHandler(async (req, res, next) => {
     return next(new ApiError(`No subcategory for this id ${id}`, 404));
   }
 
-  res.status(200).json({ data: {} });
+  res.status(200).json({});
 });
