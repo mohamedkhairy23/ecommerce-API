@@ -12,6 +12,7 @@ const globalError = require("./middlewares/errorMiddleware");
 
 const categoryRoutes = require("./routes/categoryRoute");
 const subcategoryRoutes = require("./routes/subCategoryRoute");
+const brandRoutes = require("./routes/brandRoute");
 
 dbConnection();
 
@@ -26,6 +27,7 @@ if (process.env.NODE_ENV === "development") {
 // Mount Routes
 app.use("/api/v1/categories", categoryRoutes);
 app.use("/api/v1/subcategories", subcategoryRoutes);
+app.use("/api/v1/brands", brandRoutes);
 
 app.all("*", (req, res, next) => {
   next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));
