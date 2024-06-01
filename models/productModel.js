@@ -31,8 +31,8 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: [true, "Product price is required"],
       trim: true,
-      min: [0, "Product price must be greater than 0"],
-      max: [30, "Too long product price"],
+      min: [1, "Product price must be greater than 0"],
+      max: [200000, "Too long product price"],
     },
     priceAfterDiscount: {
       type: Number,
@@ -40,7 +40,7 @@ const productSchema = new mongoose.Schema(
     colors: [String],
     imageCover: {
       type: String,
-      required: [true, "Product cover image is required"],
+      required: [true, "Product Image cover is required"],
     },
     images: [String],
     category: {
@@ -48,7 +48,7 @@ const productSchema = new mongoose.Schema(
       ref: "Category",
       required: [true, "Product must be belong to category"],
     },
-    subcategory: [
+    subcategories: [
       {
         type: mongoose.Schema.ObjectId,
         ref: "SubCategory",
@@ -60,17 +60,17 @@ const productSchema = new mongoose.Schema(
     },
     ratingsAverage: {
       type: Number,
-      default: 4.5,
-      min: [1, "Rating must be greater than or equal 1"],
-      max: [5, "Rating must be less than or equal 5"],
-      set: (val) => Math.round(val * 10) / 10,
+      min: [1, "Rating must be above or equal 1.0"],
+      max: [5, "Rating must be below or equal 5.0"],
     },
     ratingsQuantity: {
       type: Number,
       default: 0,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 module.exports = mongoose.model("Product", productSchema);
