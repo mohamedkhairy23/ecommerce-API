@@ -1,7 +1,5 @@
-const slugify = require("slugify");
 const asyncHandler = require("express-async-handler");
 const Brand = require("../models/brandModel");
-const ApiError = require("../utils/apiError");
 const ApiFeatures = require("../utils/apiFeatures");
 const factory = require("./handlersFactory");
 
@@ -28,16 +26,7 @@ exports.getBrands = asyncHandler(async (req, res) => {
 // @desc      Get Specific Brand by Id
 // @route     GET   /api/v1/brands/:id
 // @access    Public
-exports.getBrand = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
-  const brand = await Brand.findById(id);
-
-  if (!brand) {
-    return next(new ApiError(`No brand for this id ${id}`, 404));
-  }
-
-  res.status(200).json({ data: brand });
-});
+exports.getBrand = factory.getOne(Brand);
 
 // @desc      Create Brand
 // @route     POST   /api/v1/brands
