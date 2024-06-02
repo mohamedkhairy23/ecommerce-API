@@ -1,27 +1,10 @@
-const asyncHandler = require("express-async-handler");
 const Brand = require("../models/brandModel");
-const ApiFeatures = require("../utils/apiFeatures");
 const factory = require("./handlersFactory");
 
 // @desc      Get List Of Brands
 // @route     GET   /api/v1/brands
 // @access    Public
-exports.getBrands = asyncHandler(async (req, res) => {
-  const docummentsCount = await Brand.countDocuments();
-  const apiFeatures = new ApiFeatures(Brand.find(), req.query)
-    .paginate(docummentsCount)
-    .filter()
-    .sort()
-    .limitFields()
-    .search();
-
-  const { mongooseQuery, paginationResult } = apiFeatures;
-  const brands = await mongooseQuery;
-
-  res
-    .status(200)
-    .json({ result: brands.length, paginationResult, data: brands });
-});
+exports.getBrands = factory.getAll(Brand);
 
 // @desc      Get Specific Brand by Id
 // @route     GET   /api/v1/brands/:id

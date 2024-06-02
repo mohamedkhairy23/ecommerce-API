@@ -1,4 +1,3 @@
-const slugify = require("slugify");
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
 const ApiFeatures = require("../utils/apiFeatures");
@@ -44,4 +43,27 @@ exports.getOne = (Model) =>
     }
 
     res.status(200).json({ data: document });
+  });
+
+exports.getAll = (Model, modelName = "") =>
+  asyncHandler(async (req, res) => {
+    let filter = {};
+    if (req.filterObject) {
+      filter = req.filterObject;
+    }
+
+    const docummentsCount = await Model.countDocuments();
+    const apiFeatures = new ApiFeatures(Model.find(filter), req.query)
+      .paginate(docummentsCount)
+      .filter()
+      .sort()
+      .limitFields()
+      .search(modelName);
+
+    const { mongooseQuery, paginationResult } = apiFeatures;
+    const documents = await mongooseQuery;
+
+    res
+      .status(200)
+      .json({ result: documents.length, paginationResult, data: documents });
   });
