@@ -7,6 +7,7 @@ const {
   deleteSubcategory,
   setCategoryIdToBody,
   createFilterObj,
+  applySlugify,
 } = require("../services/subCategoryService");
 const {
   createSubCategoryValidator,
@@ -27,7 +28,7 @@ router
 router
   .route("/:id")
   .get(getSubCategoryValidator, getSubcategory)
-  .put(updateSubCategoryValidator, updateSubcategory)
+  .put(updateSubCategoryValidator, applySlugify, updateSubcategory)
   .delete(deleteSubCategoryValidator, deleteSubcategory);
 
 module.exports = router;

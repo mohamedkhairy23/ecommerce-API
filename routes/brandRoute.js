@@ -5,6 +5,7 @@ const {
   getBrand,
   updateBrand,
   deleteBrand,
+  applySlugify,
 } = require("../services/brandService");
 const {
   createBrandValidator,
@@ -19,7 +20,7 @@ router.route("/").get(getBrands).post(createBrandValidator, createBrand);
 router
   .route("/:id")
   .get(getBrandValidator, getBrand)
-  .put(updateBrandValidator, updateBrand)
+  .put(updateBrandValidator, applySlugify, updateBrand)
   .delete(deleteBrandValidator, deleteBrand);
 
 module.exports = router;
