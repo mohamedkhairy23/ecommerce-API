@@ -45,12 +45,7 @@ exports.getProduct = asyncHandler(async (req, res, next) => {
 // @desc      Create Product
 // @route     POST   /api/v1/products
 // @access    Private
-exports.createProduct = asyncHandler(async (req, res) => {
-  req.body.slug = slugify(req.body.title);
-
-  const product = await Product.create(req.body);
-  res.status(201).json({ data: product });
-});
+exports.createProduct = factory.createOne(Product);
 
 // @desc      Update Specific Product
 // @route     PUT   /api/v1/products/:id

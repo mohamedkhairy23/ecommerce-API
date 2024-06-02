@@ -6,25 +6,6 @@ const ApiFeatures = require("../utils/apiFeatures");
 const factory = require("./handlersFactory");
 
 // Nested Route
-// @route     POST   /api/v1/categories/:categoryId/subcategories
-exports.setCategoryIdToBody = (req, res, next) => {
-  if (!req.body.category) req.body.category = req.params.categoryId;
-  next();
-};
-// @desc      Create Category
-// @route     POST   /api/v1/subcategories
-// @access    Private
-exports.createSubCategory = asyncHandler(async (req, res) => {
-  const { name, category } = req.body;
-  const subCategory = await Subcategory.create({
-    name,
-    slug: slugify(name),
-    category,
-  });
-  res.status(201).json({ data: subCategory });
-});
-
-// Nested Route
 // @route     GET   /api/v1/categories/:categoryId/subcategories
 exports.createFilterObj = (req, res, next) => {
   let filterObject = {};
@@ -71,13 +52,21 @@ exports.getSubcategory = asyncHandler(async (req, res, next) => {
   res.status(200).json({ data: subcategory });
 });
 
+exports.setCategoryIdToBody = (req, res, next) => {
+  // Nested Route
+  //  Middleware for adding category to request by categoryId
+  if (!req.body.category) req.body.category = req.params.categoryId;
+  next();
+};
+// @desc      Create Category
+// @route     POST   /api/v1/subcategories
+// @route     POST   /api/v1/categories/:categoryId/subcategories
+// @access    Private
+exports.createSubCategory = factory.createOne(Subcategory);
+
 // @desc      Update Specific subategory
 // @route     PUT   /api/v1/subcategories/:id
 // @access    Private
-exports.applySlugify = (req, res, next) => {
-  req.body.slug = slugify(req.body.name);
-  next();
-};
 exports.updateSubcategory = factory.updateOne(Subcategory);
 
 // @desc      Delete Specific Subcategory

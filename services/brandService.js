@@ -42,19 +42,11 @@ exports.getBrand = asyncHandler(async (req, res, next) => {
 // @desc      Create Brand
 // @route     POST   /api/v1/brands
 // @access    Private
-exports.createBrand = asyncHandler(async (req, res) => {
-  const { name } = req.body;
-  const brand = await Brand.create({ name, slug: slugify(name) });
-  res.status(201).json({ data: brand });
-});
+exports.createBrand = factory.createOne(Brand);
 
 // @desc      Update Specific Brand
 // @route     PUT   /api/v1/brands/:id
 // @access    Private
-exports.applySlugify = (req, res, next) => {
-  req.body.slug = slugify(req.body.name);
-  next();
-};
 exports.updateBrand = factory.updateOne(Brand);
 
 // @desc      Delete Specific Brand

@@ -5,7 +5,6 @@ const {
   getCategory,
   updateCategory,
   deleteCategory,
-  applySlugify,
 } = require("../services/categoryService");
 const {
   getCategoryValidator,
@@ -26,7 +25,7 @@ router
 router
   .route("/:id")
   .get(getCategoryValidator, getCategory)
-  .put(updateCategoryValidator, applySlugify, updateCategory)
+  .put(updateCategoryValidator, updateCategory)
   .delete(deleteCategoryValidator, deleteCategory);
 
 module.exports = router;
