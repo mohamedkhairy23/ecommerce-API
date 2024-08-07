@@ -43,7 +43,7 @@ const server = app.listen(PORT, () => {
   console.log(`App running on port ${PORT}`.yellow.bold);
 });
 
-// Handling rejection outside express
+// Handling rejection errors outside express (Like that errors coming from database in rejection case)
 process.on("unhandledRejection", (err) => {
   console.error(`Unhandled rejection errors: ${err.name} | ${err.message}`);
   server.close(() => {
