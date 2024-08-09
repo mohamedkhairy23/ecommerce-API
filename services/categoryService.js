@@ -21,7 +21,7 @@ const asyncHandler = require("express-async-handler");
 // 2- memory storage engine
 const multerStorage = multer.memoryStorage();
 
-const multerfilter = function (req, file, cb) {
+const multerFilter = function (req, file, cb) {
   if (file.mimetype.startsWith("image")) {
     cb(null, true);
   } else {
@@ -29,7 +29,7 @@ const multerfilter = function (req, file, cb) {
   }
 };
 
-const upload = multer({ storage: multerStorage, fileFilter: multerfilter });
+const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
 
 exports.resizeImage = asyncHandler(async (req, res, next) => {
   const filename = `category=${uuidv4()}-${Date.now()}.jpeg`;
@@ -39,6 +39,8 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
     .toFormat("jpeg")
     .jpeg({ quality: 95 })
     .toFile(`uploads/categories/${filename}`);
+
+  req.body.image = filename;
 
   next();
 });

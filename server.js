@@ -1,11 +1,13 @@
+const path = require("path");
+
 const express = require("express");
 const colors = require("colors");
 const dotenv = require("dotenv");
+const morgan = require("morgan");
 
 dotenv.config({
   path: "config.env",
 });
-const morgan = require("morgan");
 const dbConnection = require("./config/database");
 const ApiError = require("./utils/apiError");
 const globalError = require("./middlewares/errorMiddleware");
@@ -20,6 +22,8 @@ dbConnection();
 const app = express();
 
 app.use(express.json());
+
+app.use(express.static(path.join(__dirname, "uploads")));
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
