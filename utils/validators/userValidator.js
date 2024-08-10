@@ -4,6 +4,7 @@ const validatorMiddleware = require("../../middlewares/validatorMiddleware");
 const User = require("../../models/userModel");
 
 /////////////// Code between for localizing express validator ///////////////////////////
+///// example validation message
 // const passwordLengthMessage = {
 //   english: "Password must be at least 6 characters",
 //   arabic: "كلمة السر المطلوبة لا تقل عن ستة أحرف",
