@@ -16,6 +16,7 @@ const categoryRoutes = require("./routes/categoryRoute");
 const subcategoryRoutes = require("./routes/subCategoryRoute");
 const brandRoutes = require("./routes/brandRoute");
 const productRoutes = require("./routes/productRoute");
+const userRoutes = require("./routes/userRoute");
 
 dbConnection();
 
@@ -34,6 +35,7 @@ app.use("/api/v1/categories", categoryRoutes);
 app.use("/api/v1/subcategories", subcategoryRoutes);
 app.use("/api/v1/brands", brandRoutes);
 app.use("/api/v1/products", productRoutes);
+app.use("/api/v1/users", userRoutes);
 
 app.all("*", (req, res, next) => {
   next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));
