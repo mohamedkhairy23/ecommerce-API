@@ -1,9 +1,9 @@
-const { uploadSingleImage } = require("../middlewares/uploadImage");
-const User = require("../models/userModel");
-const factory = require("./handlersFactory");
 const asyncHandler = require("express-async-handler");
 const { v4: uuidv4 } = require("uuid");
 const sharp = require("sharp");
+const { uploadSingleImage } = require("../middlewares/uploadImage");
+const User = require("../models/userModel");
+const factory = require("./handlersFactory");
 
 exports.uploadUserImage = uploadSingleImage("profileImg");
 
