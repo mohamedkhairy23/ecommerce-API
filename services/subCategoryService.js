@@ -28,15 +28,15 @@ exports.setCategoryIdToBody = (req, res, next) => {
 // @desc      Create Category
 // @route     POST   /api/v1/subcategories
 // @route     POST   /api/v1/categories/:categoryId/subcategories
-// @access    Private
+// @access    Private/Admin/Manager
 exports.createSubCategory = factory.createOne(Subcategory);
 
 // @desc      Update Specific subategory
 // @route     PUT   /api/v1/subcategories/:id
-// @access    Private
+// @access    Private/Admin/Manager
 exports.updateSubcategory = factory.updateOne(Subcategory);
 
 // @desc      Delete Specific Subcategory
 // @route     DELETE   /api/v1/subcategories/:id
-// @access    Private
+// @access    Private/Admin
 exports.deleteSubcategory = factory.deleteOne(Subcategory);

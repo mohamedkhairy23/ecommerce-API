@@ -14,6 +14,7 @@ const {
   updateSubCategoryValidator,
   deleteSubCategoryValidator,
 } = require("../utils/validators/subCategoryValidator");
+const { protect, allowedTo } = require("../services/authService");
 
 // mergeParams: Allow us to access the parameters on other routers
 // ex: We need to access categoryId from category routes
@@ -21,13 +22,29 @@ const router = express.Router({ mergeParams: true });
 
 router
   .route("/")
-  .post(setCategoryIdToBody, createSubCategoryValidator, createSubCategory)
+  .post(
+    protect,
+    allowedTo("manager", "admin"),
+    setCategoryIdToBody,
+    createSubCategoryValidator,
+    createSubCategory
+  )
   .get(createFilterObj, getSubcategories);
 
 router
   .route("/:id")
   .get(getSubCategoryValidator, getSubcategory)
-  .put(updateSubCategoryValidator, updateSubcategory)
-  .delete(deleteSubCategoryValidator, deleteSubcategory);
+  .put(
+    protect,
+    allowedTo("manager", "admin"),
+    updateSubCategoryValidator,
+    updateSubcategory
+  )
+  .delete(
+    protect,
+    allowedTo("admin"),
+    deleteSubCategoryValidator,
+    deleteSubcategory
+  );
 
 module.exports = router;
