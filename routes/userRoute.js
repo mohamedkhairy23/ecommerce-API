@@ -14,6 +14,7 @@ const {
   getUserValidator,
   deleteUserValidator,
   updateUserValidator,
+  changeUserPasswordValidator,
 } = require("../utils/validators/userValidator");
 
 const router = express.Router();
@@ -28,6 +29,10 @@ router
   .put(uploadUserImage, resizeImage, updateUserValidator, updateUser)
   .delete(deleteUserValidator, deleteUser);
 
-router.put("/changePassword/:id", changeUserPassword);
+router.put(
+  "/changePassword/:id",
+  changeUserPasswordValidator,
+  changeUserPassword
+);
 
 module.exports = router;
