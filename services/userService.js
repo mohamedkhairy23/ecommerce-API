@@ -6,6 +6,7 @@ const { uploadSingleImage } = require("../middlewares/uploadImage");
 const User = require("../models/userModel");
 const factory = require("./handlersFactory");
 const ApiError = require("../utils/apiError");
+const { generateToken } = require("../utils/generateToken");
 
 exports.uploadUserImage = uploadSingleImage("profileImg");
 
@@ -70,7 +71,7 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
 // @route     PUT   /api/v1/users/changePassword/:id
 // @access    Private/Admin
 exports.changeUserPassword = asyncHandler(async (req, res, next) => {
-  const document = await User.findByIdAndUpdate(
+  const user = await User.findByIdAndUpdate(
     req.params.id,
     {
       password: await bcrypt.hash(req.body.password, 12),
@@ -81,14 +82,46 @@ exports.changeUserPassword = asyncHandler(async (req, res, next) => {
     }
   );
 
-  if (!document) {
-    return next(new ApiError(`No document for this id ${req.params.id}`, 404));
+  if (!user) {
+    return next(new ApiError(`No user for this id ${req.params.id}`, 404));
   }
 
-  res.status(200).json({ data: document });
+  res.status(200).json({ data: user });
 });
 
 // @desc      Delete Specific User
 // @route     DELETE   /api/v1/users/:id
 // @access    Private/Admin
 exports.deleteUser = factory.deleteOne(User);
+
+// @desc      Get My Data (Logged in user data)
+// @route     DELETE   /api/v1/users/getMe
+// @access    Private/Protect
+exports.getLoggedUserData = asyncHandler(async (req, res, next) => {
+  req.params.id = req.user._id;
+  next();
+});
+
+// @desc      Update logged user password
+// @route     PUT   /api/v1/users/changeMyPassword
+// @access    Private/Protect
+exports.updateLoggedUserPassword = asyncHandler(async (req, res, next) => {
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      password: await bcrypt.hash(req.body.password, 12),
+      passwordChangedAt: Date.now(),
+    },
+    {
+      new: true,
+    }
+  );
+
+  if (!user) {
+    return next(new ApiError(`No user for this id ${req.params.id}`, 404));
+  }
+
+  const token = generateToken(user._id);
+
+  res.status(200).json({ data: user, token });
+});

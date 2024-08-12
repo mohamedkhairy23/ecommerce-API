@@ -8,6 +8,8 @@ const {
   uploadUserImage,
   resizeImage,
   changeUserPassword,
+  getLoggedUserData,
+  updateLoggedUserPassword,
 } = require("../services/userService");
 const {
   createUserValidator,
@@ -15,11 +17,22 @@ const {
   deleteUserValidator,
   updateUserValidator,
   changeUserPasswordValidator,
+  changeLoggedUserPasswordValidator,
 } = require("../utils/validators/userValidator");
 const { protect, allowedTo } = require("../services/authService");
 
 const router = express.Router();
 
+// For logged in user
+router.get("/getMe", protect, getLoggedUserData, getUser);
+router.put(
+  "/changeMyPassword",
+  protect,
+  changeLoggedUserPasswordValidator,
+  updateLoggedUserPassword
+);
+
+///// For admin
 router
   .route("/")
   .get(protect, allowedTo("manager", "admin"), getUsers)
@@ -31,6 +44,7 @@ router
     createUserValidator,
     createUser
   );
+
 router
   .route("/:id")
   .get(protect, allowedTo("admin"), getUserValidator, getUser)
