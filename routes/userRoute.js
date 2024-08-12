@@ -11,6 +11,8 @@ const {
   getLoggedUserData,
   updateLoggedUserPassword,
   updateLoggedUserData,
+  deactivateLoggedUser,
+  activeLoggedUser,
 } = require("../services/userService");
 const {
   createUserValidator,
@@ -33,6 +35,7 @@ router.put(
   changeLoggedUserPasswordValidator,
   updateLoggedUserPassword
 );
+
 router.put(
   "/updateMe",
   protect,
@@ -41,6 +44,10 @@ router.put(
   updateLoggedUserValidator,
   updateLoggedUserData
 );
+
+router.put("/deactiviteMe", protect, deactivateLoggedUser);
+
+router.put("/activeMe", protect, activeLoggedUser);
 
 ///// For admin
 router

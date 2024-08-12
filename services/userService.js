@@ -150,3 +150,25 @@ exports.updateLoggedUserData = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({ data: updatedUser });
 });
+
+// @desc      Deactivate logged user
+// @route     PUT   /api/v1/users/deactiviteMe
+// @access    Private/Protect
+exports.deactivateLoggedUser = asyncHandler(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user._id, { active: false });
+
+  res
+    .status(200)
+    .send({ status: "Success", message: "Account deactivated successfully" });
+});
+
+// @desc      Deactivate logged user
+// @route     PUT   /api/v1/users/activeMe
+// @access    Private/Protect
+exports.activeLoggedUser = asyncHandler(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user._id, { active: true });
+
+  res
+    .status(200)
+    .send({ status: "Success", message: "Account activated successfully" });
+});
