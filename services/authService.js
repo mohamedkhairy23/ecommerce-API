@@ -199,3 +199,32 @@ exports.verifyPasswordResetCode = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({ status: "Success" });
 });
+
+// @desc      Reset Password
+// @route     POST   /api/v1/auth/resetPassword
+// @access    Public
+exports.resetPassword = asyncHandler(async (req, res, next) => {
+  // 1) Get user based on email
+  const user = await User.findOne({ email: req.body.email });
+
+  if (!user) {
+    return next(new ApiError(`There is no user with email ${req.body.email}`));
+  }
+
+  // check if reset code verified
+  if (!user.passwordResetVerified) {
+    return next(new ApiError("Reset cde not verified", 400));
+  }
+
+  user.password = req.body.newPassword;
+  user.passwordResetCode = undefined;
+  user.passwordResetExpires = undefined;
+  user.passwordResetVerified = undefined;
+
+  await user.save();
+
+  // 3) if everything is ok, generate token
+  const token = generateToken(user._id);
+
+  res.status(200).json({ data: user, token });
+});
