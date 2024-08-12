@@ -38,6 +38,17 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    // Embedded document
+    addresses: [
+      {
+        id: { type: mongoose.Schema.Types.ObjectId },
+        alias: String,
+        details: String,
+        phone: String,
+        city: String,
+        postalCode: String,
+      },
+    ],
   },
   { timestamps: true }
 );
