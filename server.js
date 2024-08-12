@@ -18,6 +18,7 @@ const brandRoutes = require("./routes/brandRoute");
 const productRoutes = require("./routes/productRoute");
 const userRoutes = require("./routes/userRoute");
 const authRoutes = require("./routes/authRoute");
+const reviewRoutes = require("./routes/reviewRoute");
 
 dbConnection();
 
@@ -38,6 +39,7 @@ app.use("/api/v1/brands", brandRoutes);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/reviews", reviewRoutes);
 
 app.all("*", (req, res, next) => {
   next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));
