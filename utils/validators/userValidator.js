@@ -191,3 +191,34 @@ exports.changeLoggedUserPasswordValidator = [
 
   validatorMiddleware,
 ];
+
+exports.updateLoggedUserValidator = [
+  check("name")
+    .optional()
+    .custom((val, { req }) => {
+      req.body.slug = slugify(val);
+      return true;
+    }),
+
+  check("email")
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Invalid email address")
+    .custom((val, { req }) =>
+      User.findById(req.user.id).then((user) => {
+        if (user && user.email !== val) {
+          return Promise.reject(new Error("Email already in use"));
+        }
+      })
+    ),
+
+  check("phone")
+    .optional()
+    .isMobilePhone(["ar-EG", "ar-SA"])
+    .withMessage("Only accept Egypt phone numbers and saudian phone numbers"),
+
+  check("profileImg").optional(),
+
+  validatorMiddleware,
+];

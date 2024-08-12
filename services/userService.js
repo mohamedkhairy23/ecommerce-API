@@ -125,3 +125,28 @@ exports.updateLoggedUserPassword = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({ data: user, token });
 });
+
+// @desc      Update logged user data
+// @route     PUT   /api/v1/users/updateMe
+// @access    Private/Protect
+exports.updateLoggedUserData = asyncHandler(async (req, res, next) => {
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      name: req.body.name,
+      slug: req.body.slug,
+      phone: req.body.phone,
+      email: req.body.email,
+      profileImg: req.body.profileImg,
+    },
+    {
+      new: true,
+    }
+  );
+
+  if (!updatedUser) {
+    return next(new ApiError(`No document for this id ${req.params.id}`, 404));
+  }
+
+  res.status(200).json({ data: updatedUser });
+});

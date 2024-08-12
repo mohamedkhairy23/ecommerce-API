@@ -10,6 +10,7 @@ const {
   changeUserPassword,
   getLoggedUserData,
   updateLoggedUserPassword,
+  updateLoggedUserData,
 } = require("../services/userService");
 const {
   createUserValidator,
@@ -18,18 +19,27 @@ const {
   updateUserValidator,
   changeUserPasswordValidator,
   changeLoggedUserPasswordValidator,
+  updateLoggedUserValidator,
 } = require("../utils/validators/userValidator");
 const { protect, allowedTo } = require("../services/authService");
 
 const router = express.Router();
 
-// For logged in user
+// For logged in users
 router.get("/getMe", protect, getLoggedUserData, getUser);
 router.put(
   "/changeMyPassword",
   protect,
   changeLoggedUserPasswordValidator,
   updateLoggedUserPassword
+);
+router.put(
+  "/updateMe",
+  protect,
+  uploadUserImage,
+  resizeImage,
+  updateLoggedUserValidator,
+  updateLoggedUserData
 );
 
 ///// For admin
