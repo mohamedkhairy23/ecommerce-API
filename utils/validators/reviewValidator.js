@@ -45,7 +45,7 @@ exports.updateReviewValidator = [
           );
         }
         // check if a logged in user own the review
-        if (review.user.toString() !== req.user._id.toString()) {
+        if (review.user._id.toString() !== req.user._id.toString()) {
           return Promise.reject(
             new Error(`You are not allowed to perform this action`)
           );
