@@ -1,6 +1,4 @@
 const asyncHandler = require("express-async-handler");
-
-const ApiError = require("../utils/apiError");
 const User = require("../models/userModel");
 
 // @desc      Add Product To Wishlist
