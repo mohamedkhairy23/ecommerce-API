@@ -55,6 +55,7 @@ exports.updateReviewValidator = [
 
   validatorMiddleware,
 ];
+
 exports.deleteReviewValidator = [
   check("id")
     .isMongoId()
