@@ -51,6 +51,7 @@ exports.getLoggedInUserWishlist = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     status: "Success",
+    results: user.wishlist.length,
     data: user.wishlist,
   });
 });
