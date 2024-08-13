@@ -6,7 +6,7 @@ const {
   updateReview,
   deleteReview,
   createFilterObj,
-  setProductIdToBody,
+  setProductIdAndUserIdToBody,
 } = require("../services/reviewService");
 const {
   getReviewValidator,
@@ -24,7 +24,7 @@ router
   .post(
     protect,
     allowedTo("user"),
-    setProductIdToBody,
+    setProductIdAndUserIdToBody,
     createReviewValidator,
     createReview
   );

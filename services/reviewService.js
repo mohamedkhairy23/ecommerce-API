@@ -18,10 +18,12 @@ exports.getReviews = factory.getAll(Review);
 // @access    Public
 exports.getReview = factory.getOne(Review);
 
-exports.setProductIdToBody = (req, res, next) => {
+exports.setProductIdAndUserIdToBody = (req, res, next) => {
   // Nested Route
   //  Middleware for adding product to request by productId
   if (!req.body.product) req.body.product = req.params.productId;
+  if (!req.body.user) req.body.user = req.user._id;
+
   next();
 };
 // @desc      Create Review
