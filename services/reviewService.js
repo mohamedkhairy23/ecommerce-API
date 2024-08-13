@@ -1,6 +1,13 @@
 const Review = require("../models/reviewModel");
 const factory = require("./handlersFactory");
 
+exports.createFilterObj = (req, res, next) => {
+  // Nested Route
+  let filterObject = {};
+  if (req.params.productId) filterObject = { product: req.params.productId };
+  req.filterObject = filterObject;
+  next();
+};
 // @desc      Get List Of reviews
 // @route     GET   /api/v1/reviews
 // @access    Public
