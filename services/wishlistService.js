@@ -10,7 +10,7 @@ exports.addProductToWishList = asyncHandler(async (req, res, next) => {
   const user = await User.findByIdAndUpdate(
     req.user._id,
     {
-      // $addToSet operator in mongoDB => add productId to wishlst if productId not exist
+      // $addToSet operator in mongoDB => add productId to wishlist array if productId not exist
       $addToSet: { wishlist: req.body.productId },
     },
     { new: true }
@@ -19,6 +19,26 @@ exports.addProductToWishList = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     status: "Success",
     message: "Product added successfully to your wishlist",
+    data: user.wishlist,
+  });
+});
+
+// @desc      Remove Product From Wishlist
+// @route     DELETE   /api/v1/wishlist/:productId
+// @access    Private/User
+exports.removeProductFromWishlist = asyncHandler(async (req, res, next) => {
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      // $pull operator in mongoDB => remove productId from wishlist array if productId not exist
+      $pull: { wishlist: req.params.productId },
+    },
+    { new: true }
+  );
+
+  res.status(200).json({
+    status: "Success",
+    message: "Product removed successfully from your wishlist",
     data: user.wishlist,
   });
 });
