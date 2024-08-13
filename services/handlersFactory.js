@@ -26,6 +26,9 @@ exports.updateOne = (Model) =>
       );
     }
 
+    // Trigger "save" event when update document
+    document.save();
+
     res.status(200).json({ data: document });
   });
 
