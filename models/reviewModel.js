@@ -71,4 +71,8 @@ reviewSchema.post("save", async function () {
   this.constructor.calcAverageRatingsAndQuantity(this.product);
 });
 
+reviewSchema.post("remove", async function () {
+  this.constructor.calcAverageRatingsAndQuantity(this.product);
+});
+
 module.exports = mongoose.model("Review", reviewSchema);
