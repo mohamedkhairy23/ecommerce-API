@@ -71,7 +71,7 @@ reviewSchema.post("save", async function () {
   this.constructor.calcAverageRatingsAndQuantity(this.product);
 });
 
-reviewSchema.post("remove", async function () {
+reviewSchema.post("deleteOne", { document: true }, async function () {
   this.constructor.calcAverageRatingsAndQuantity(this.product);
 });
 

@@ -5,14 +5,14 @@ const ApiFeatures = require("../utils/apiFeatures");
 exports.deleteOne = (Model) =>
   asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    const document = await Model.findByIdAndDelete(id);
+    const document = await Model.findById(id);
 
     if (!document) {
       return next(new ApiError(`No document for this id ${id}`, 404));
     }
 
-    // Trigger "remove" event when update document
-    document.remove();
+    // Trigger "deleteOne" event when delete document
+    await document.deleteOne();
 
     res.status(200).json({});
   });
