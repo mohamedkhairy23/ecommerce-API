@@ -21,7 +21,7 @@ exports.addAddress = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc      Remove Product From Wishlist
+// @desc      Remove address From addresses list
 // @route     DELETE   /api/v1/addresses/:addressId
 // @access    Private/User
 exports.removeAddressFromUserAddressesList = asyncHandler(
@@ -37,7 +37,7 @@ exports.removeAddressFromUserAddressesList = asyncHandler(
 
     res.status(200).json({
       status: "Success",
-      message: "Product removed successfully",
+      message: "Address removed successfully",
       data: user.addresses,
     });
   }
