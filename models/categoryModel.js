@@ -29,7 +29,7 @@ categorySchema.post("init", (doc) => {
   setImageUrl(doc);
 });
 
-categorySchema.post("save", function (doc) {
+categorySchema.post("save", (doc) => {
   setImageUrl(doc);
 });
 

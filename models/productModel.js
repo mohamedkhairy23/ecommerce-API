@@ -70,8 +70,17 @@ const productSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
+
+// Virtual Populate Reviews On Product
+productSchema.virtual("reviews", {
+  ref: "Review", // refer to reference of review model that exports in key "Review"
+  foreignField: "product", // field name that exists in review schema
+  localField: "_id", // refer to _id of product
+});
 
 // monggose query middleware
 productSchema.pre(/^find/, function (next) {
@@ -110,7 +119,7 @@ productSchema.post("init", (doc) => {
   setImageUrl(doc);
 });
 
-productSchema.post("save", function (doc) {
+productSchema.post("save", (doc) => {
   setImageUrl(doc);
 });
 
