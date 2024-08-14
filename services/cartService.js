@@ -111,3 +111,39 @@ exports.clearLoggedInUserCart = asyncHandler(async (req, res, next) => {
     message: "Cart removed successfully",
   });
 });
+
+// @desc      Update specific cart item quantity
+// @route     PUT   /api/v1/cart/:itemId
+// @access    Private/User
+exports.updateCartItemQuantity = asyncHandler(async (req, res, next) => {
+  const { quantity } = req.body;
+
+  const cart = await Cart.findOne({ user: req.user._id });
+
+  if (!cart) {
+    return next(new ApiError(`There is no cart for user ${req.user._id}`, 404));
+  }
+
+  const itemIndex = cart.cartItems.findIndex(
+    (item) => item._id.toString() === req.params.itemId
+  );
+
+  if (itemIndex > -1) {
+    const cartItem = cart.cartItems[itemIndex];
+    cartItem.quantity = quantity;
+
+    cart.cartItems[itemIndex] = cartItem;
+  } else {
+    return next(
+      new ApiError(`There is no item for this id ${req.params.itemId}`, 404)
+    );
+  }
+
+  calcTotalCartPrice(cart);
+
+  res.status(200).json({
+    status: "Success",
+    numOfCartItems: cart.cartItems.length,
+    data: cart,
+  });
+});
