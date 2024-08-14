@@ -99,3 +99,15 @@ exports.removeSpecificCartItem = asyncHandler(async (req, res, next) => {
     data: cart,
   });
 });
+
+// @desc      Clear logged user cart
+// @route     DELETE   /api/v1/cart
+// @access    Private/User
+exports.clearLoggedInUserCart = asyncHandler(async (req, res, next) => {
+  await Cart.findOneAndDelete({ user: req.user._id });
+
+  res.status(200).json({
+    status: "Success",
+    message: "Cart removed successfully",
+  });
+});
