@@ -141,6 +141,8 @@ exports.updateCartItemQuantity = asyncHandler(async (req, res, next) => {
 
   calcTotalCartPrice(cart);
 
+  await cart.save();
+
   res.status(200).json({
     status: "Success",
     numOfCartItems: cart.cartItems.length,
