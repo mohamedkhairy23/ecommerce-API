@@ -72,11 +72,9 @@ exports.getLoggedInUserCart = asyncHandler(async (req, res, next) => {
     );
   }
 
-  res
-    .status(200)
-    .json({
-      status: "Success",
-      numOfCartItems: cart.cartItems.length,
-      data: cart,
-    });
+  res.status(200).json({
+    status: "Success",
+    numOfCartItems: cart.cartItems.length,
+    data: cart,
+  });
 });
