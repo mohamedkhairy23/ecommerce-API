@@ -56,6 +56,7 @@ exports.addProductToCart = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     status: "Success",
     message: "Prduct added to cart successfully",
+    numOfCartItems: cart.cartItems.length,
     data: cart,
   });
 });
@@ -71,6 +72,26 @@ exports.getLoggedInUserCart = asyncHandler(async (req, res, next) => {
       new ApiError(`There is no cart for this user id: ${req.user._id}`, 404)
     );
   }
+
+  res.status(200).json({
+    status: "Success",
+    numOfCartItems: cart.cartItems.length,
+    data: cart,
+  });
+});
+
+// @desc      Remove specific cart item from cart items array
+// @route     DELETE OR PUT   /api/v1/cart/:itemId
+// @access    Private/User
+exports.removeSpecificCartItem = asyncHandler(async (req, res, next) => {
+  const cart = await Cart.findOneAndUpdate(
+    { user: req.user._id },
+    { $pull: { cartItems: { _id: req.params.itemId } } },
+    { new: true }
+  );
+
+  calcTotalCartPrice(cart);
+  await cart.save();
 
   res.status(200).json({
     status: "Success",
