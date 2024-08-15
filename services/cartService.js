@@ -12,6 +12,7 @@ const calcTotalCartPrice = (cart) => {
   });
 
   cart.totalCartPrice = totalPrice;
+  cart.totalPriceAfterDiscount = undefined;
 
   return totalPrice;
 };
