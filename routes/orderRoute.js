@@ -6,10 +6,15 @@ const {
   getOrder,
   filterOrderForLoggedUser,
 } = require("../services/orderService");
+const {
+  createCashOrderValidator,
+} = require("../utils/validators/orderValidator");
 
 const router = express.Router();
 
-router.route("/:cartId").post(protect, allowedTo("user"), createCashOrder);
+router
+  .route("/:cartId")
+  .post(protect, allowedTo("user"), createCashOrderValidator, createCashOrder);
 router.get(
   "/",
   protect,
