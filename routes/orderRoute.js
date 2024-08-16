@@ -5,6 +5,8 @@ const {
   getAllOrders,
   getOrder,
   filterOrderForLoggedUser,
+  updateOrderToPaid,
+  updateOrderToDelivered,
 } = require("../services/orderService");
 const {
   createCashOrderValidator,
@@ -29,6 +31,18 @@ router.get(
   allowedTo("user", "admin", "manager"),
   getOrderValidator,
   getOrder
+);
+router.put(
+  "/:id/pay",
+  protect,
+  allowedTo("admin", "manager"),
+  updateOrderToPaid
+);
+router.put(
+  "/:id/deliver",
+  protect,
+  allowedTo("admin", "manager"),
+  updateOrderToDelivered
 );
 
 module.exports = router;
