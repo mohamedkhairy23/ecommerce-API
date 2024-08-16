@@ -91,5 +91,5 @@ exports.getOrder = asyncHandler(async (req, res, next) => {
     );
   }
 
-  res.status(201).json({ data: order });
+  res.status(200).json({ data: order });
 });
