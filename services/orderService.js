@@ -74,15 +74,9 @@ exports.getOrder = asyncHandler(async (req, res, next) => {
     order = await Order.findOne({
       _id: req.params.id,
       user: req.user._id,
-    }).populate({
-      path: "user",
-      select: "name",
     });
   } else {
-    order = await Order.findById(req.params.id).populate({
-      path: "user",
-      select: "name",
-    });
+    order = await Order.findById(req.params.id);
   }
 
   if (!order) {
