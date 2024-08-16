@@ -7,7 +7,7 @@ const Cart = require("../models/cartModel");
 const Product = require("../models/productModel");
 
 // @desc      Create cash order (Cash on delivery order)
-// @route     GET   /api/v1/orders/:cartId
+// @route     POST   /api/v1/orders/:cartId
 // @access    Private/User
 exports.createCashOrder = asyncHandler(async (req, res, next) => {
   // app settings
@@ -53,4 +53,43 @@ exports.createCashOrder = asyncHandler(async (req, res, next) => {
   }
 
   res.status(201).json({ status: "Success", data: order });
+});
+
+exports.filterOrderForLoggedUser = asyncHandler(async (req, res, next) => {
+  if (req.user.role === "user") req.filterObject = { user: req.user._id };
+
+  next();
+});
+// @desc      Get all orders
+// @route     POST   /api/v1/orders
+// @access    Private/User/Admin/Manager
+exports.getAllOrders = factory.getAll(Order);
+
+// @desc      Get a specific order
+// @route     GET   /api/v1/orders/:id
+// @access    Private/User/Admin/Manager
+exports.getOrder = asyncHandler(async (req, res, next) => {
+  let order;
+  if (req.user.role === "user") {
+    order = await Order.findOne({
+      _id: req.params.id,
+      user: req.user._id,
+    }).populate({
+      path: "user",
+      select: "name",
+    });
+  } else {
+    order = await Order.findById(req.params.id).populate({
+      path: "user",
+      select: "name",
+    });
+  }
+
+  if (!order) {
+    return next(
+      new ApiError(`There is no order with id ${req.params.id}`, 404)
+    );
+  }
+
+  res.status(201).json({ data: order });
 });
