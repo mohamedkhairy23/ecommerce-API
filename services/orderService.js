@@ -5,14 +5,16 @@ const factory = require("./handlersFactory");
 const Order = require("../models/orderModel");
 const Cart = require("../models/cartModel");
 const Product = require("../models/productModel");
+const Settings = require("../models/settingsModel");
 
 // @desc      Create cash order (Cash on delivery order)
 // @route     POST   /api/v1/orders/:cartId
 // @access    Private/User
 exports.createCashOrder = asyncHandler(async (req, res, next) => {
+  const settings = await Settings.findById("66bfac0be34c9a80f90e82be");
+
   // app settings
-  const taxPrice = 0;
-  const shippingPrice = 0;
+  const { taxPrice, shippingPrice } = settings;
 
   // 1) Get cart depend on cartId
   const cart = await Cart.findById(req.params.cartId);
@@ -36,6 +38,8 @@ exports.createCashOrder = asyncHandler(async (req, res, next) => {
     cartItems: cart.cartItems,
     totalOrderPrice: totalOrderPrice,
     shippingAddress: req.body.shippingAddress,
+    taxPrice: taxPrice,
+    shippingPrice: shippingPrice,
   });
 
   // 4) After creating order, decrement product quantity, increment product sold
