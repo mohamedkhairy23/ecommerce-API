@@ -8,6 +8,7 @@ const {
 } = require("../services/orderService");
 const {
   createCashOrderValidator,
+  getOrderValidator,
 } = require("../utils/validators/orderValidator");
 
 const router = express.Router();
@@ -26,7 +27,7 @@ router.get(
   "/:id",
   protect,
   allowedTo("user", "admin", "manager"),
-  filterOrderForLoggedUser,
+  getOrderValidator,
   getOrder
 );
 
