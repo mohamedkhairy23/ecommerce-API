@@ -1,7 +1,10 @@
 const path = require("path");
 
 const express = require("express");
-const stripe = require("stripe");
+// eslint-disable-next-line import/no-extraneous-dependencies
+const cors = require("cors");
+// eslint-disable-next-line import/no-extraneous-dependencies
+const compression = require("compression");
 const colors = require("colors");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
@@ -19,6 +22,12 @@ dbConnection();
 
 const app = express();
 
+app.use(cors());
+app.options("*", cors());
+
+// compress all responses
+app.use(compression());
+
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname, "uploads")));
@@ -26,6 +35,10 @@ app.use(express.static(path.join(__dirname, "uploads")));
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
+app.get("/health", async (req, res) => {
+  res.send({ message: "health OK!" });
+});
 
 // Mount Routes
 mountRoutes(app);
