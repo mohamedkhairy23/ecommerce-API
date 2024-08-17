@@ -191,6 +191,11 @@ const createCardOrder = async (session) => {
   const shippingAddress = session.metadata;
   const orderPrice = session.amount_total / 100;
 
+  const settings = await Settings.findById("66bfac0be34c9a80f90e82be");
+
+  // app settings
+  const { taxPrice, shippingPrice } = settings;
+
   const cart = await Cart.findById(cartId);
   const user = await User.findOne({ email: session.customer_email });
 
@@ -203,6 +208,8 @@ const createCardOrder = async (session) => {
     isPaid: true,
     paidAt: Date.now(),
     paymentMethodType: "card",
+    taxPrice: taxPrice,
+    shippingPrice: shippingPrice,
   });
 
   // 4) After creating order, decrement product quantity, increment product sold
