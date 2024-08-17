@@ -6,7 +6,9 @@ exports.getOrderValidator = [
   validatorMiddleware,
 ];
 
-exports.createCashOrderValidator = [
+exports.createOrderValidator = [
+  check("cartId").isMongoId().withMessage("Invalid Cart ID format"),
+
   check("shippingAddress.details")
     .notEmpty()
     .withMessage("Address details required")

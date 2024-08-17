@@ -10,8 +10,8 @@ const {
   checkoutSession,
 } = require("../services/orderService");
 const {
-  createCashOrderValidator,
   getOrderValidator,
+  createOrderValidator,
 } = require("../utils/validators/orderValidator");
 
 const router = express.Router();
@@ -20,13 +20,13 @@ router.get(
   "/checkout-session/:cartId",
   protect,
   allowedTo("user"),
-  createCashOrderValidator,
+  createOrderValidator,
   checkoutSession
 );
 
 router
   .route("/:cartId")
-  .post(protect, allowedTo("user"), createCashOrderValidator, createCashOrder);
+  .post(protect, allowedTo("user"), createOrderValidator, createCashOrder);
 router.get(
   "/",
   protect,
