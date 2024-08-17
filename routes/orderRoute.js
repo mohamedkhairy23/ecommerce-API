@@ -7,6 +7,7 @@ const {
   filterOrderForLoggedUser,
   updateOrderToPaid,
   updateOrderToDelivered,
+  checkoutSession,
 } = require("../services/orderService");
 const {
   createCashOrderValidator,
@@ -14,6 +15,14 @@ const {
 } = require("../utils/validators/orderValidator");
 
 const router = express.Router();
+
+router.get(
+  "/checkout-session/:cartId",
+  protect,
+  allowedTo("user"),
+  createCashOrderValidator,
+  checkoutSession
+);
 
 router
   .route("/:cartId")

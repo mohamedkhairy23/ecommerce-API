@@ -21,5 +21,6 @@
     "node/no-unsupported-features/es-syntax": "off",
     "prefer-destructuring": ["warn", { "object": true, "array": false }],
     "no-unused-vars": ["warn", { "argsIgnorePattern": "req|res|next|val" }]
+    // eslint-disable-next-line import/no-extraneous-dependencies
   }
 }

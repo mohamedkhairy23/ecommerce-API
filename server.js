@@ -1,6 +1,7 @@
 const path = require("path");
 
 const express = require("express");
+const stripe = require("stripe");
 const colors = require("colors");
 const dotenv = require("dotenv");
 const morgan = require("morgan");

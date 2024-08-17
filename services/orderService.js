@@ -1,3 +1,5 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
 const factory = require("./handlersFactory");
@@ -130,4 +132,55 @@ exports.updateOrderToDelivered = asyncHandler(async (req, res, next) => {
   const updatedOrder = await order.save();
 
   res.status(200).json({ status: "Success", data: updatedOrder });
+});
+
+// @desc      Get checkout session from stripe paid and send it as response
+// @route     GET   /api/v1/orders/checkout-session/:cartId
+// @access    Private/user
+exports.checkoutSession = asyncHandler(async (req, res, next) => {
+  const settings = await Settings.findById("66bfac0be34c9a80f90e82be");
+
+  // app settings
+  const { taxPrice, shippingPrice } = settings;
+
+  // 1) Get cart depend on cartId
+  const cart = await Cart.findById(req.params.cartId);
+
+  if (!cart) {
+    return next(
+      new ApiError(`There is no cart with id ${req.params.cartId}`, 404)
+    );
+  }
+
+  // 2) Get order price depend on cart price "Check if coupon applied"
+  const cartPrice = cart.totalPriceAfterDiscount
+    ? cart.totalPriceAfterDiscount
+    : cart.totalCartPrice;
+
+  const totalOrderPrice = cartPrice + taxPrice + shippingPrice;
+
+  // 3) Create stripe checkout session
+  const session = await stripe.checkout.sessions.create({
+    line_items: [
+      {
+        quantity: 1,
+        price_data: {
+          currency: "egp",
+          unit_amount: totalOrderPrice * 100,
+          product_data: {
+            name: `${req.user.name}`,
+          },
+        },
+      },
+    ],
+    mode: "payment",
+    success_url: `${req.protocol}://${req.get("host")}/orders`,
+    cancel_url: `${req.protocol}://${req.get("host")}/cart`,
+    customer_email: req.user.email,
+    client_reference_id: req.params.cartId,
+    metadata: req.body.shippingAddress,
+  });
+
+  // Send session to response
+  res.status(200).json({ status: "success", session });
 });
