@@ -55,8 +55,18 @@ const limiter = rateLimit({
 });
 app.use("/api", limiter);
 
-// Prevent HTTP parameter pollution attacks (hpp attacks)
-app.use(hpp());
+// Prevent HTTP parameter pollution (hpp)
+app.use(
+  hpp({
+    whitelist: [
+      "price",
+      "sold",
+      "quantity",
+      "ratingsAverage",
+      "ratingsQuantity",
+    ],
+  })
+);
 //////////////////////////////////////////////////////////////////////
 
 app.get("/health", async (req, res) => {
