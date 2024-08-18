@@ -9,6 +9,9 @@ const colors = require("colors");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
 
+const mongoSanitize = require("express-mongo-sanitize");
+const helmet = require("helmet");
+const xss = require("xss-clean");
 const rateLimit = require("express-rate-limit");
 const hpp = require("hpp");
 
@@ -46,7 +49,16 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-///////////////////////////////////////////////////////////////////////
+//////////////////////// Code Between For Security ///////////////////////////////////////////////
+// Prevent NoSQL Query Injection & Sanitize Data
+app.use(mongoSanitize());
+
+// Set security headers
+app.use(helmet());
+
+// Prevent cross site scripting attacks (XSS attacks)
+app.use(xss());
+
 // Rate Limiting (limit each IP to 100 requests per 15 mins)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 mins
@@ -67,7 +79,7 @@ app.use(
     ],
   })
 );
-//////////////////////////////////////////////////////////////////////
+//////////////////////// Code Between For Security ///////////////////////////////////////////////
 
 app.get("/health", async (req, res) => {
   res.send({ message: "health OK!" });
