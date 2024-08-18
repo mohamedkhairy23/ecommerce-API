@@ -10,6 +10,7 @@ const dotenv = require("dotenv");
 const morgan = require("morgan");
 
 const rateLimit = require("express-rate-limit");
+const hpp = require("hpp");
 
 dotenv.config({
   path: "config.env",
@@ -53,6 +54,9 @@ const limiter = rateLimit({
   message: "Too many a",
 });
 app.use("/api", limiter);
+
+// Prevent HTTP parameter pollution attacks (hpp attacks)
+app.use(hpp());
 //////////////////////////////////////////////////////////////////////
 
 app.get("/health", async (req, res) => {
