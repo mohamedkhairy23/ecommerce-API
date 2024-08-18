@@ -9,6 +9,8 @@ const colors = require("colors");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
 
+const rateLimit = require("express-rate-limit");
+
 dotenv.config({
   path: "config.env",
 });
@@ -42,6 +44,16 @@ app.use(express.static(path.join(__dirname, "uploads")));
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
+///////////////////////////////////////////////////////////////////////
+// Rate Limiting (limit each IP to 100 requests per 15 mins)
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 mins
+  max: 100, // 100 requests
+  message: "Too many a",
+});
+app.use("/api", limiter);
+//////////////////////////////////////////////////////////////////////
 
 app.get("/health", async (req, res) => {
   res.send({ message: "health OK!" });
