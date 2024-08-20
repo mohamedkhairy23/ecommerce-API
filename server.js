@@ -1,9 +1,7 @@
 const path = require("path");
 
 const express = require("express");
-// eslint-disable-next-line import/no-extraneous-dependencies
 const cors = require("cors");
-// eslint-disable-next-line import/no-extraneous-dependencies
 const compression = require("compression");
 const colors = require("colors");
 const dotenv = require("dotenv");
