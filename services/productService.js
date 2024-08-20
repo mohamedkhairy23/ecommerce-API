@@ -39,9 +39,9 @@ exports.resizeProductImages = asyncHandler(async (req, res, next) => {
         req.body.images.push(imageName);
       })
     );
-
-    next();
   }
+
+  next();
 });
 
 // @desc      Get List Of Products
